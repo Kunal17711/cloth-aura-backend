@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
-// ✅ Connect to MongoDB Atlas
+// ✅ MongoDB Connection
 mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log('✅ MongoDB Connected'))
   .catch((err) => console.log('❌ MongoDB Error:', err));
@@ -24,7 +24,7 @@ const productSchema = new mongoose.Schema({
 });
 const Product = mongoose.model('Product', productSchema);
 
-// ✅ Add New Product (Admin Use)
+// ✅ Add Product
 app.post('/add-product', async (req, res) => {
   const { name, price, image } = req.body;
   const newProduct = new Product({ name, price, image });
@@ -32,13 +32,13 @@ app.post('/add-product', async (req, res) => {
   res.json({ message: '✅ Product Added' });
 });
 
-// ✅ Get All Products
+// ✅ Get Products
 app.get('/products', async (req, res) => {
   const products = await Product.find();
   res.json(products);
 });
 
-// ✅ Razorpay Init
+// ✅ Razorpay Config
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
@@ -60,7 +60,12 @@ app.post('/create-order', async (req, res) => {
   }
 });
 
-// ✅ Server Start
+// ✅ Root route for Render test
+app.get('/', (req, res) => {
+  res.send('🧵 Cloth Aura Backend is Live!');
+});
+
+// ✅ Start Server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
